@@ -1,6 +1,7 @@
 package pkgMain;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -8,6 +9,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import pkgLibrary.Book;
+import pkgLibrary.BookException;
 import pkgLibrary.Catalog;
 
 public class XMLReader {
@@ -22,14 +24,13 @@ public class XMLReader {
 		//	Increase the price of each book
 		IncreasePrice(cat,0.10);
 		
+		SetInitialCost(cat);
+		
 		//	Write the XML file from 'cat' object
 		WriteXMLFile(cat);
 		
 	}
 
-
-	
-	
 	private static Catalog ReadCatalog() {
 		Catalog cat = ReadXMLFile();
 		
@@ -49,6 +50,16 @@ public class XMLReader {
 		return cat;
 	}
 	
+	private static Catalog SetInitialCost(Catalog cat) {
+		for (Book b : cat.getBooks() ) {
+			double newCost = (0.80 * b.getPrice());
+			b.setCost(Math.round(newCost *100.0)/ 100.0);
+		}
+		return cat;
+	}
+	
+	
+	
 	private static void WriteXMLFile(Catalog cat) {
 		try {
 
@@ -66,7 +77,7 @@ public class XMLReader {
 			jaxbMarshaller.marshal(cat, System.out);
 
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 	}
 
